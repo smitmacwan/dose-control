@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Login from './Login';
 
 const App = () => {
@@ -8,6 +8,7 @@ const App = () => {
   const [drugInfo, setDrugInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const drugs = [
     "Acetaminophen", "Adalimumab", "Albuterol", "Alprazolam", "Amoxicillin", "Atorvastatin", "Azithromycin",
@@ -61,53 +62,65 @@ const App = () => {
     sessionStorage.setItem('userName', name);
   };
 
+  const handleLogout = () => {
+    setUserName(null);
+    sessionStorage.removeItem('userName');
+    navigate('/login'); // Navigate to login page on logout
+  };
+
   return (
     <div className="container-fluid p-0">
-  <nav className="navbar navbar-expand-lg bg-light">
-    <div className="container">
-      <a className="navbar-brand" href="#">
-        <img
-          src="/DoseControl_Logo_Transparent.png"
-          alt="Logo"
-          style={{ height: '60px' }}
-        />
-      </a>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <a className="nav-link px-4" href="/">Home</a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link px-4" href="/login">Login</a>
-          </li>
-        </ul>
-        <span className="navbar-text px-4">
-          {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
-        </span>
-      </div>
-    </div>
-  </nav>
+      <nav className="navbar navbar-expand-lg bg-light">
+        <div className="container">
+          <a className="navbar-brand" href="#">
+            <img
+              src="/DoseControl_Logo_Transparent.png"
+              alt="Logo"
+              style={{ height: '60px' }}
+            />
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <a className="nav-link px-4" href="/">Home</a>
+              </li>
+              <li className="nav-item">
+                {userName ? (
+                  <button className="nav-link btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                ) : (
+                  <a className="nav-link px-4" href="/login">Login</a>
+                )}
+              </li>
+            </ul>
+            <span className="navbar-text px-4 fw-semibold">
+              {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
+            </span>
+          </div>
+        </div>
+      </nav>
 
-  <div className="container my-5">
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <div className="text-center">
-            <h1 className="display-4 mb-5">Search for Drug Information</h1>
+      <div className="container my-5">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div className="text-center">
+                <h1 className="display-4 mb-5">Search for Drug Information</h1>
 
-            <div className="input-group mb-3 w-50 mx-auto">
+                <div className="input-group mb-3 w-50 mx-auto">
                   <span className="input-group-text">Select Drug</span>
                   <select
                     className="form-select"
@@ -123,53 +136,52 @@ const App = () => {
                   </select>
                 </div>
 
-            {errorMessage && (
-              <div className="alert alert-danger">{errorMessage}</div>
-            )}
+                {errorMessage && (
+                  <div className="alert alert-danger">{errorMessage}</div>
+                )}
 
-            {drugInfo && (
-              <div className="table-responsive mt-4">
-                <table className="table table-striped table-bordered">
-                  <thead className="table-b">
-                    <tr>
-                      <th scope="col">Label</th>
-                      <th scope="col">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.keys(drugInfo).map((key) => (
-                      <tr key={key}>
-                        <td>{key}</td>
-                        <td>
-                          {Array.isArray(drugInfo[key])
-                            ? drugInfo[key].join(', ')
-                            : typeof drugInfo[key] === 'object' && drugInfo[key] !== null
-                            ? JSON.stringify(drugInfo[key], null, 2)
-                            : drugInfo[key]}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {drugInfo && (
+                  <div className="table-responsive mt-4">
+                    <table className="table table-striped table-bordered">
+                      <thead className="table-b">
+                        <tr>
+                          <th scope="col">Label</th>
+                          <th scope="col">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.keys(drugInfo).map((key) => (
+                          <tr key={key}>
+                            <td>{key}</td>
+                            <td>
+                              {Array.isArray(drugInfo[key])
+                                ? drugInfo[key].join(', ')
+                                : typeof drugInfo[key] === 'object' && drugInfo[key] !== null
+                                ? JSON.stringify(drugInfo[key], null, 2)
+                                : drugInfo[key]}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        }
-      />
-      <Route
-        path="/login"
-        element={<Login onLoginSuccess={handleLoginSuccess} />}
-      />
-    </Routes>
-  </div>
+            }
+          />
+          <Route
+            path="/login"
+            element={<Login onLoginSuccess={handleLoginSuccess} />}
+          />
+        </Routes>
+      </div>
 
-  <footer className="bg-light text-black py-4 text-center">
-    <div className="container">
-      <p>© 2024 Drug Info. All Rights Reserved.</p>
+      <footer className="bg-light text-black py-4 text-center">
+        <div className="container">
+          <p>© 2024 Drug Info. All Rights Reserved.</p>
+        </div>
+      </footer>
     </div>
-  </footer>
-</div>
-
   );
 };
 

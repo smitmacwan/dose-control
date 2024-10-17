@@ -49,81 +49,86 @@ const Login = ({ onLoginSuccess }) => {
 
   return (
     <div className="container mt-5">
-      {successMessage && <div className="alert alert-success">{successMessage}</div>}
-      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+  {successMessage && <div className="alert alert-success">{successMessage}</div>}
+  {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
-      <div className="row">
-        {/* Sign In Form (Left Side) */}
-        <div className="col-md-6">
-          <h2 className="text-center">Sign In</h2>
-          <form onSubmit={handleLoginSubmit}>
-            <div className="form-group">
-              <label className='my-2'>Email</label>
-              <input
-                type="email"
-                className="form-control my-2"
-                value={loginData.email}
-                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className='my-2'>Password</label>
-              <input
-                type="password"
-                className="form-control my-2"
-                value={loginData.password}
-                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              Sign In
-            </button>
-          </form>
-        </div>
-
-        {/* Sign Up Form (Right Side) */}
-        <div className="col-md-6">
-          <h2 className="text-center">Sign Up</h2>
-          <form onSubmit={handleSignupSubmit}>
-            <div className="form-group">
-              <label className='my-2'>Name</label>
-              <input
-                type="text"
-                className="form-control my-2"
-                value={signupData.name}
-                onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className='my-2'>Email</label>
-              <input
-                type="email"
-                className="form-control my-2"
-                value={signupData.email}
-                onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className='my-2'>Password</label>
-              <input
-                type="password"
-                className="form-control my-2"
-                value={signupData.password}
-                onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-success btn-block">
-              Sign Up
-            </button>
-          </form>
-        </div>
+  <div className="row">
+    {/* Sign In Form (Left Side) */}
+    <div className="col-md-6">
+      <div className="card shadow p-4 mb-5 bg-white rounded">
+        <h2 className="text-center">Sign In</h2>
+        <form onSubmit={handleLoginSubmit}>
+          <div className="form-group">
+            <label className="my-2">Email</label>
+            <input
+              type="email"
+              className="form-control my-2"
+              value={loginData.email}
+              onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="my-2">Password</label>
+            <input
+              type="password"
+              className="form-control my-2"
+              value={loginData.password}
+              onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-block btn-custom">
+            Sign In
+          </button>
+        </form>
       </div>
     </div>
+
+    {/* Sign Up Form (Right Side) */}
+    <div className="col-md-6">
+      <div className="card shadow p-4 mb-5 bg-white rounded">
+        <h2 className="text-center">Sign Up</h2>
+        <form onSubmit={handleSignupSubmit}>
+          <div className="form-group">
+            <label className="my-2">Name</label>
+            <input
+              type="text"
+              className="form-control my-2"
+              value={signupData.name}
+              onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="my-2">Email</label>
+            <input
+              type="email"
+              className="form-control my-2"
+              value={signupData.email}
+              onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="my-2">Password</label>
+            <input
+              type="password"
+              className="form-control my-2"
+              value={signupData.password}
+              onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-success btn-block btn-custom">
+            Sign Up
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 

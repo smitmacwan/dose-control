@@ -92,7 +92,7 @@ const App = () => {
             <a className="nav-link px-4" href="/login">Login</a>
           </li>
         </ul>
-        <span className="navbar-text ml-auto px-4">
+        <span className="navbar-text px-4">
           {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
         </span>
       </div>

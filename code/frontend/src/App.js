@@ -7,10 +7,7 @@ const App = () => {
   const [drugName, setDrugName] = useState('');
   const [drugInfo, setDrugInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [userName, setUserName] = useState(() => {
-    // Check for user name in sessionStorage
-    return sessionStorage.getItem('userName') || null;
-  });
+  const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
 
   const drugs = [
     "Acetaminophen", "Adalimumab", "Albuterol", "Alprazolam", "Amoxicillin", "Atorvastatin", "Azithromycin",
@@ -61,99 +58,118 @@ const App = () => {
 
   const handleLoginSuccess = (name) => {
     setUserName(name);
-    sessionStorage.setItem('userName', name); // Store user name in sessionStorage
+    sessionStorage.setItem('userName', name);
   };
 
   return (
+    <div className="container-fluid p-0">
+  <nav className="navbar navbar-expand-lg bg-light">
     <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">Drug Info</a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <a className="nav-link" href="/">Home</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/login">Login</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div className="text-center mt-2">
-        <span className="navbar-text">
-          {userName ? `Hello ${userName}` : 'Hello there'}
+      <a className="navbar-brand" href="#">
+        <img
+          src="/DoseControl_Logo_Transparent.png"
+          alt="Logo"
+          style={{ height: '60px' }}
+        />
+      </a>
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <a className="nav-link" href="/">Home</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="/login">Login</a>
+          </li>
+        </ul>
+        <span className="navbar-text ml-auto">
+          {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
         </span>
       </div>
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <h1 className="text-center m-4">Drug Information Search</h1>
-
-              <div className="drug-list text-center">
-                <span>Select Drug: </span>
-                <select
-                  className="form-select"
-                  value={drugName}
-                  onChange={(e) => handleQuickSearch(e.target.value)}
-                  style={{ width: '50%', display: 'inline-block' }}
-                >
-                  <option value="" disabled>Select a drug</option>
-                  {drugs.map((drug) => (
-                    <option key={drug} value={drug}>
-                      {drug}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {errorMessage && <div id="noData" className="text-danger text-center mt-3">{errorMessage}</div>}
-
-              {drugInfo && (
-                <div id="tableContainer" className="mt-4">
-                  <table className="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Label</th>
-                        <th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.keys(drugInfo).map((key) => (
-                        <tr key={key}>
-                          <td>{key}</td>
-                          <td>
-                            {Array.isArray(drugInfo[key])
-                              ? drugInfo[key].join(', ')
-                              : typeof drugInfo[key] === 'object' && drugInfo[key] !== null
-                              ? JSON.stringify(drugInfo[key], null, 2)
-                              : drugInfo[key]}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          }
-        />
-        <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
-      </Routes>
     </div>
+  </nav>
+
+  <div className="container my-5">
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <div className="text-center">
+            <h1 className="display-4 mb-5">Search for Drug Information</h1>
+
+            <div className="input-group mb-3 w-50 mx-auto">
+                  <span className="input-group-text">Select Drug</span>
+                  <select
+                    className="form-select"
+                    value={drugName}
+                    onChange={(e) => handleQuickSearch(e.target.value)}
+                  >
+                    <option value="" disabled>Select a drug</option>
+                    {drugs.map((drug) => (
+                      <option key={drug} value={drug}>
+                        {drug}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+            {errorMessage && (
+              <div className="alert alert-danger">{errorMessage}</div>
+            )}
+
+            {drugInfo && (
+              <div className="table-responsive mt-4">
+                <table className="table table-striped table-bordered">
+                  <thead className="table-b">
+                    <tr>
+                      <th scope="col">Label</th>
+                      <th scope="col">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.keys(drugInfo).map((key) => (
+                      <tr key={key}>
+                        <td>{key}</td>
+                        <td>
+                          {Array.isArray(drugInfo[key])
+                            ? drugInfo[key].join(', ')
+                            : typeof drugInfo[key] === 'object' && drugInfo[key] !== null
+                            ? JSON.stringify(drugInfo[key], null, 2)
+                            : drugInfo[key]}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        }
+      />
+      <Route
+        path="/login"
+        element={<Login onLoginSuccess={handleLoginSuccess} />}
+      />
+    </Routes>
+  </div>
+
+  <footer className="bg-light text-black py-4 text-center">
+    <div className="container">
+      <p>© 2024 Drug Info. All Rights Reserved.</p>
+    </div>
+  </footer>
+</div>
+
   );
 };
 

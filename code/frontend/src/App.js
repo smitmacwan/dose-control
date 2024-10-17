@@ -86,13 +86,13 @@ const App = () => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
-            <a className="nav-link px-3" href="/">Home</a>
+            <a className="nav-link px-4" href="/">Home</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link px-3" href="/login">Login</a>
+            <a className="nav-link px-4" href="/login">Login</a>
           </li>
         </ul>
-        <span className="navbar-text ml-auto px-3">
+        <span className="navbar-text ml-auto px-4">
           {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
         </span>
       </div>

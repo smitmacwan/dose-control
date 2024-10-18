@@ -70,6 +70,11 @@ const App = () => {
     sessionStorage.setItem('userName', name);
   };
 
+  const handleLogout = () => {
+    setUserName(null);
+    sessionStorage.removeItem('userName');
+  };
+
   return (
     <div className="container-fluid p-0">
       <nav className="navbar navbar-expand-lg bg-light">
@@ -80,7 +85,13 @@ const App = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item"><a className="nav-link px-4" href="/">Home</a></li>
-              <li className="nav-item"><a className="nav-link px-4" href="/login">Login</a></li>
+              {!userName ? (
+                <li className="nav-item"><a className="nav-link px-4" href="/login">Login</a></li>
+              ) : (
+                <li className="nav-item">
+                  <a className="nav-link px-4" href="#" onClick={handleLogout}>Logout</a>
+                </li>
+              )}
             </ul>
             <span className="navbar-text ml-auto px-4">
               {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
@@ -97,7 +108,6 @@ const App = () => {
               <div className="text-center">
                 <h1 className="display-4 mb-5">Search for Drug Information</h1>
 
-                {/* Drug Dropdown */}
                 <div className="input-group mb-3 w-50 mx-auto">
                   <span className="input-group-text">Select Drug</span>
                   <select 
@@ -112,7 +122,6 @@ const App = () => {
                   </select>
                 </div>
 
-                {/* Symptom Dropdown */}
                 <div className="input-group mb-3 w-50 mx-auto">
                   <span className="input-group-text">Select Symptom</span>
                   <select 
@@ -127,10 +136,8 @@ const App = () => {
                   </select>
                 </div>
 
-                {/* Error Message */}
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
-                {/* Drug Info Table */}
                 {drugInfo && (
                   <div className="table-responsive mt-4">
                     <table className="table table-striped table-bordered">

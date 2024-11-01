@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import About from './About';
-import './App.css'; // Import the CSS file for custom styles
+import './App.css';
 
 const App = () => {
   const [drugName, setDrugName] = useState('');
@@ -49,7 +49,14 @@ const App = () => {
       const data = await response.json();
 
       if (data.results && data.results.length > 0) {
-        setDrugInfo(data.results[0]);
+        const result = data.results[0];
+        setDrugInfo({
+          "Indications and Usage": result.indications_and_usage,
+          "Warnings": result.warnings,
+          "Dosage and Administration": result.dosage_and_administration,
+          "Purpose": result.purpose,
+          "Active Ingredients": result.active_ingredient,
+        });
       } else {
         setErrorMessage('No data found.');
       }
@@ -155,16 +162,10 @@ const App = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(drugInfo).map((key) => (
+                        {Object.entries(drugInfo).map(([key, value]) => (
                           <tr key={key}>
                             <td>{key}</td>
-                            <td>
-                              {Array.isArray(drugInfo[key])
-                                ? drugInfo[key].join(', ')
-                                : typeof drugInfo[key] === 'object'
-                                  ? JSON.stringify(drugInfo[key], null, 2)
-                                  : drugInfo[key]}
-                            </td>
+                            <td>{Array.isArray(value) ? value.join(', ') : value}</td>
                           </tr>
                         ))}
                       </tbody>

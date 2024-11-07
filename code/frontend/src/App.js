@@ -4,6 +4,13 @@ import { Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import About from './About';
 import './App.css';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import Donations from './Donations.js';
+import Success from './Success';
+import Cancel from './Cancel';
+
+const stripePromise = loadStripe('pk_test_51QIewlLcL7MzCv4NK4x6jPCbfCzTijpjGxJTrFdVxrQrCYPEGKf9CV8gxXCY14llvV2cGbEjfL9FdSBPCBO00tHT003Ncvyd4m');
 
 const App = () => {
   const [drugName, setDrugName] = useState('');
@@ -85,6 +92,7 @@ const App = () => {
   };
 
   return (
+    <Elements stripe={stripePromise}>
     <div className="container-fluid p-0">
       <nav className="navbar navbar-expand-lg bg-light">
         <div className="container">
@@ -102,6 +110,7 @@ const App = () => {
                 </li>
               )}
               <li className="nav-item"><a className="nav-link px-4" href="/about">About</a></li>
+              <li className="nav-item"><a className="nav-link px-4" href="/donations">Donations</a></li>
             </ul>
             <span className="navbar-text ml-auto px-4">
               {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
@@ -178,6 +187,9 @@ const App = () => {
         />
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/about" element={<About />} />
+        <Route path="/donations" element={<Donations />} />
+        <Route path="/success" component={Success} />
+        <Route path="/cancel" component={Cancel} />
       </Routes>
 
       <footer className="bg-light text-black py-4 text-center">
@@ -186,6 +198,7 @@ const App = () => {
         </div>
       </footer>
     </div>
+    </Elements>
   );
 };
 

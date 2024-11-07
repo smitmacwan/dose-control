@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 // Initialize the app
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -87,6 +88,36 @@ app.post('/api/signin', async (req, res) => {
   }
 });
 
+/*Strip payment gateway */
+app.post('/api/checkout', async (req, res) => {
+    const { amount } = req.body;
+  
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Donation',
+              },
+              unit_amount: amount,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:3000/success', // Replace with your success page
+        cancel_url: 'http://localhost:3000/cancel',   // Replace with your cancel page
+      });
+  
+      res.json({ id: session.id });
+    } catch (error) {
+      console.error('Error creating Stripe checkout session:', error);
+      res.status(500).send('Server error');
+    }
+  });
 
 // Start server
 const PORT = process.env.PORT || 4000;

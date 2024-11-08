@@ -1,51 +1,64 @@
-app.css
+/* General Styles */
+html, body {
+  height: 100%; /* Ensures full height for scrolling */
+  margin: 0; /* Remove default margin to avoid overflow issues */
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling */
+}
+
 .navbar {
-  padding: 1rem;
+  padding: 1.5rem; /* Increased padding for better spacing */
 }
 
 .navbar .navbar-brand img {
-  height: 40px;
+  height: 50px; /* Slightly larger logo */
 }
 
 .navbar-text {
   font-weight: bold;
-  margin-right: 1rem;
+  margin-right: 2rem; /* Increase spacing between navbar items */
 }
 
 .table-b {
   background-color: #685569;
   color: #1a1a1a;
+  padding: 20px; /* Add padding for table */
 }
 
 .select-drug {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly; /* Space items evenly */
+  flex-wrap: wrap;
 }
 
 .select-drug h5 {
-  margin-right: 1rem;
+  margin-right: 2rem; /* Increase spacing for better alignment */
 }
 
 .alert {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 footer {
   background-color: #f8f9fa;
   color: #000;
+  padding: 20px; /* Add padding to footer */
 }
 
 
-/*login / sign up*/
+/* Login / Sign Up */
 
 .card {
   border: 1px solid #dddddd;
   background-color: #f9f9f9;
   border-radius: 8px;
+  padding: 2rem; /* Increased padding for better spacing */
 }
 
 .card h2 {
   color: #333333;
+  margin-bottom: 1rem; /* Margin below title */
 }
 
 .form-control {
@@ -80,15 +93,15 @@ footer {
   background-color: #0056b3;
 }
 
-/*hero section*/
-
+/* Hero Section */
 .hero-section {
   position: relative;
-  height: 60vh;
+  height: 80vh; /* Increased height for better visibility on desktop */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 0 30px; /* Add more padding for spacing */
 }
 
 .hero-section::before {
@@ -107,8 +120,10 @@ footer {
   position: relative;
   z-index: 2;
   background-color: rgba(0, 0, 0, 0.2);
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
+  text-align: center;
+  max-width: 700px; /* Limit max-width for readability */
 }
 
 .hero-section h1, .hero-section .input-group {
@@ -120,12 +135,11 @@ footer {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-
-/*About*/
+/* About Section */
 
 .about-hero-section {
   position: relative;
-  height: 50vh;
+  height: 60vh; /* Increased height for more impact */
   background: url('Images/Hero/pill-4897529_1920.jpg') center center/cover no-repeat;
   display: flex;
   align-items: center;
@@ -135,11 +149,178 @@ footer {
 
 .hero-overlay {
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 20px;
+  padding: 40px;
   text-align: center;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Responsive Styles */
+
+/* For large screens (desktops, 1200px and above) */
+@media (min-width: 1200px) {
+  .hero-section {
+    height: 80vh; /* Set hero section to take up more height */
+  }
+
+  .hero-section h1 {
+    font-size: 3rem; /* Larger font size for better readability */
+  }
+
+  .select-drug {
+    justify-content: space-evenly;
+  }
+
+  .navbar .navbar-brand img {
+    height: 50px; /* Slightly larger logo */
+  }
+
+  .select-drug h5 {
+    font-size: 1.2rem; /* Increase font size for better readability */
+  }
+
+  .card {
+    padding: 2rem; /* More padding for cards */
+  }
+}
+
+/* For medium screens (tablets, 768px to 1024px) */
+@media (max-width: 1024px) {
+  .hero-section {
+    height: 60vh; /* Adjust height for tablets */
+  }
+
+  .hero-section h1 {
+    font-size: 2rem; /* Slightly larger font size */
+  }
+
+  .select-drug {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .select-drug h5 {
+    margin-bottom: 1rem;
+  }
+
+  .navbar .navbar-brand img {
+    height: 40px; /* Slightly smaller logo */
+  }
+
+  .input-group {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .hero-overlay {
+    padding: 20px;
+  }
+}
+
+/* For small screens (mobile, 480px to 767px) */
+@media (max-width: 767px) {
+  .navbar {
+    padding: 0.8rem;
+  }
+
+  .navbar .navbar-brand img {
+    height: 30px;
+  }
+
+  .navbar-text {
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+  }
+
+  .hero-section {
+    height: 40vh;
+  }
+
+  .hero-section h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .hero-section .overlay {
+    padding: 15px;
+  }
+
+  .select-drug {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .select-drug h5 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .alert {
+    margin-top: 10px;
+  }
+
+  .input-group {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .card {
+    padding: 15px;
+    margin-top: 10px;
+  }
+
+  .about-hero-section {
+    height: 40vh;
+  }
+
+  .hero-overlay {
+    padding: 10px;
+  }
+}
+
+/* For very small screens (phones, less than 480px) */
+@media (max-width: 480px) {
+  .hero-section {
+    height: 35vh;
+  }
+
+  .hero-section h1 {
+    font-size: 1.2rem;
+  }
+
+  .input-group-text, .form-select {
+    font-size: 0.85rem;
+  }
+
+  .select-drug {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .select-drug h5 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .navbar {
+    padding: 0.5rem;
+  }
+
+  .navbar-text {
+    font-size: 0.8rem;
+  }
+
+  .card {
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .btn-custom {
+    padding: 0.5rem 1rem;
+  }
 }

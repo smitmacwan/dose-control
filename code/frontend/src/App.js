@@ -13,53 +13,47 @@ import Cancel from './Cancel';
 const stripePromise = loadStripe('pk_test_51QIewlLcL7MzCv4NK4x6jPCbfCzTijpjGxJTrFdVxrQrCYPEGKf9CV8gxXCY14llvV2cGbEjfL9FdSBPCBO00tHT003Ncvyd4m');
 
 const App = () => {
-  const [drugName, setDrugName] = useState('');
   const [symptom, setSymptom] = useState('');
   const [drugInfo, setDrugInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedDrug, setSelectedDrug] = useState(''); 
+
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
 
-  const drugs = [
-"Acetaminophen", "Adalimumab", "Albuterol", "Alprazolam", "Amiodarone", "Amoxicillin", 
-"Amlodipine", "Atorvastatin", "Azathioprine", "Azithromycin", "Benazepril", "Bupropion", 
-"Carvedilol", "Cetirizine", "Citalopram", "Clemastine", "Clindamycin", "Clopidogrel", 
-"Dexamethasone", "Diazepam", "Digoxin", "Diclofenac", "Diphenhydramine", "Doxycycline", 
-"Duloxetine", "Enalapril", "Enoxaparin", "Escitalopram", "Esomeprazole", "Eszopiclone", 
-"Fluoxetine", "Fluticasone", "Folic Acid", "Furosemide", "Gabapentin", "Hydrochlorothiazide", 
-"Hydroxyzine", "Ibuprofen", "Insulin Glargine", "Ketoconazole", "Lansoprazole", "Lisinopril", 
-"Losartan", "Lorazepam", "Loratadine", "Metformin", "Methotrexate", "Metoprolol", "Methylprednisolone", 
-"Montelukast", "Nadolol", "Naproxen", "Olmesartan", "Omeprazole", "Oxycodone", "Pantoprazole", 
-"Paracetamol", "Prednisone", "Propranolol", "Rosuvastatin", "Sertraline", "Simvastatin", 
-"Spironolactone", "Tamsulosin", "Tramadol", "Valacyclovir", "Venlafaxine", "Warfarin", 
-"Zolpidem", "Zoledronic Acid"
+  const symptomToDrugs = {
+    "Pain": ["Ibuprofen", "Acetaminophen", "Naproxen"],
+    "Fever": ["Acetaminophen", "Ibuprofen", "Aspirin"], 
+    "Cough": ["Dextromethorphan", "Guaifenesin", "Codeine"],
+    "Allergy": ["Cetirizine", "Loratadine", "Diphenhydramine"],
+    "Headache": ["Aspirin", "Acetaminophen", "Ibuprofen"],
+    "Diabetes": ["Metformin", "Insulin Glargine", "Glipizide"],
+    "Asthma": ["Albuterol", "Montelukast", "Fluticasone"],
+    "Inflammation": ["Prednisone", "Ibuprofen", "Naproxen"],
+    "Depression": ["Citalopram", "Sertraline", "Duloxetine"],
+    "Hypertension": ["Lisinopril", "Amlodipine", "Losartan"],
+    "Anxiety": ["Alprazolam", "Lorazepam", "Diazepam"],
+    "Nausea": ["Ondansetron", "Metoclopramide", "Promethazine"],
+    "Arthritis": ["Methotrexate", "Naproxen", "Prednisone"],
+    "Insomnia": ["Zolpidem", "Eszopiclone", "Temazepam"],
+    "Infection": ["Amoxicillin", "Clindamycin", "Azithromycin"],
+    "Skin Rash": ["Hydrocortisone", "Diphenhydramine", "Clobetasol"],
+    "Heartburn": ["Omeprazole", "Esomeprazole", "Ranitidine"],
+    "Migraine": ["Sumatriptan", "Rizatriptan", "Amitriptyline"],
+    "Flu": ["Oseltamivir", "Zanamivir", "Baloxavir"],
+    "Chronic Pain": ["Tramadol", "Gabapentin", "Amitriptyline"]
+  };
 
-  ];
-
-  const symptoms = [
-    "Pain", "Fever", "Cough", "Allergy", "Headache", "Diabetes", "Asthma", "Inflammation",
-    "Depression", "Hypertension", "Anxiety", "Nausea", "Arthritis", "Insomnia", "Infection",
-    "Skin Rash", "Heartburn", "Migraine", "Flu", "Chronic Pain"
-  ];
-
-  const fetchDrugData = async (query, isSymptom) => {
-    if (!query.trim()) {
-      setErrorMessage('Please select a valid option.');
-      setDrugInfo(null);
-      return;
-    }
+  const fetchDrugData = async (drug) => {
+    if (!drug) return;
 
     setErrorMessage('');
     setDrugInfo(null);
 
-    const searchQuery = isSymptom
-      ? `https://api.fda.gov/drug/label.json?search=indications_and_usage:"${query}"&limit=1`
-      : `https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${query}"&limit=1`; // Fixed URL structure
+    const searchQuery = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${drug}"&limit=1`;
 
     try {
-      console.log("Search Query: ", searchQuery); // Log search query
       const response = await fetch(searchQuery);
       const data = await response.json();
-      console.log("API Response: ", data); // Log API response
 
       if (data.results && data.results.length > 0) {
         const result = data.results[0];
@@ -79,22 +73,16 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    if (drugName) fetchDrugData(drugName, false);
-  }, [drugName]);
-
-  useEffect(() => {
-    if (symptom) fetchDrugData(symptom, true);
-  }, [symptom]);
-
-  const handleLoginSuccess = (name) => {
-    setUserName(name);
-    sessionStorage.setItem('userName', name);
+  const handleSymptomSelect = (symptom) => {
+    setSymptom(symptom);
+    setDrugInfo(null);
+    setErrorMessage('');
   };
 
-  const handleLogout = () => {
-    setUserName(null);
-    sessionStorage.removeItem('userName');
+
+  const handleDrugSelect = (drug) => {
+    setSelectedDrug(drug); // Set the selected drug name
+    fetchDrugData(drug);
   };
 
   return (
@@ -112,7 +100,7 @@ const App = () => {
                   <li className="nav-item"><a className="nav-link px-4" href="/login">Login</a></li>
                 ) : (
                   <li className="nav-item">
-                    <a className="nav-link px-4" href="#" onClick={handleLogout}>Logout</a>
+                    <a className="nav-link px-4" href="#" onClick={() => { sessionStorage.removeItem('userName'); setUserName(null); }}>Logout</a>
                   </li>
                 )}
                 <li className="nav-item"><a className="nav-link px-4" href="/about">About</a></li>
@@ -134,33 +122,64 @@ const App = () => {
                   <div className="overlay">
                     <h1 className="display-4">Search for Drug Information</h1>
 
-                    <div className="input-group my-3 w-50 mx-auto">
-                      <span className="input-group-text">Select Drug</span>
-                      <select
-                        className="form-select"
-                        value={drugName}
-                        onChange={(e) => setDrugName(e.target.value)}
-                      >
-                        <option value="" disabled>Select a drug</option>
-                        {drugs.map((drug) => (
-                          <option key={drug} value={drug}>{drug}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="input-group mb-3 w-50 mx-auto">
-                      <span className="input-group-text">Select Symptom</span>
+                    <div className="input-group my-3 w-100 mx-auto">
                       <select
                         className="form-select"
                         value={symptom}
-                        onChange={(e) => setSymptom(e.target.value)}
+                        onChange={(e) => handleSymptomSelect(e.target.value)}
                       >
                         <option value="" disabled>Select a symptom</option>
-                        {symptoms.map((symp) => (
+                        {Object.keys(symptomToDrugs).map((symp) => (
                           <option key={symp} value={symp}>{symp}</option>
                         ))}
                       </select>
                     </div>
+
+                      {/* Common Symptoms Section */}
+                      <h5 className="mt-4">Common Symptoms:</h5>
+                      <div className="d-flex flex-wrap justify-content-center mb-3">
+                        {["Pain", "Fever", "Cough", "Allergy", "Headache", "Anxiety", "Nausea", "Insomnia"].map((commonSymptom) => (
+                          <button
+                            key={commonSymptom}
+                            className="btn btn-primary m-1"
+                            style={{
+                              padding: '5px 15px',
+                              borderRadius: '20px',
+                              fontSize: '0.85rem',
+                              backgroundColor: '#007bff',
+                              color: '#fff'
+                            }}
+                            onClick={() => handleSymptomSelect(commonSymptom)}
+                          >
+                            {commonSymptom}
+                          </button>
+                        ))}
+                      </div>
+
+
+
+                    {symptom && (
+                      <>
+                        <h2 className="mt-4 mb-3">For {symptom}, these are the recommended drugs:</h2>
+                        <div className="d-flex justify-content-center flex-wrap">
+                          {symptomToDrugs[symptom].map((drug) => (
+                            <button
+                              key={drug}
+                              className="btn btn-primary m-2"
+                              style={{
+                                padding: '10px 20px',
+                                borderRadius: '5px',
+                                backgroundColor: '#007bff',
+                                color: '#fff'
+                              }}
+                              onClick={() => handleDrugSelect(drug)}
+                            >
+                              {drug}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
 
                     {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
                   </div>
@@ -168,6 +187,7 @@ const App = () => {
 
                 {drugInfo && (
                   <div className="container my-5">
+                    <h3 className="mt-5 mb-3 text-center">Drug details: {selectedDrug}</h3>
                     <div className="table-responsive">
                       <table className="table table-striped table-bordered">
                         <thead>
@@ -191,11 +211,11 @@ const App = () => {
               </div>
             }
           />
-          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/donations" element={<Donations />} />
-          <Route path="/success" component={Success} />
-          <Route path="/cancel" component={Cancel} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
         </Routes>
 
         <footer className="bg-light text-black py-4 text-center">

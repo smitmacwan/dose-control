@@ -10,7 +10,7 @@ const Donations = () => {
 
     try {
       // Call the backend to create a checkout session
-      const response = await axios.post('http://localhost:4000/create-checkout-session', { amount });
+      const response = await axios.post('http://localhost:4000/api/checkout', { amount });
       const { id } = response.data; // Get session ID from the response
 
       // Redirect to Stripe Checkout

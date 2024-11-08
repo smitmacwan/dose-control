@@ -20,15 +20,19 @@ const App = () => {
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
 
   const drugs = [
-    "Acetaminophen", "Adalimumab", "Albuterol", "Alprazolam", "Amoxicillin", "Atorvastatin",
-    "Azithromycin", "Budesonide", "Carvedilol", "Cetirizine", "Clopidogrel", "Diazepam",
-    "Diclofenac", "Digoxin", "Doxycycline", "Duloxetine", "Enoxaparin", "Escitalopram",
-    "Esomeprazole", "Fluoxetine", "Furosemide", "Gabapentin", "Hydrochlorothiazide",
-    "Ibuprofen", "Insulin Glargine", "Lansoprazole", "Lisinopril", "Losartan", "Metformin",
-    "Metoprolol", "Montelukast", "Naproxen", "Omeprazole", "Oxycodone", "Pantoprazole",
-    "Paracetamol", "Prednisone", "Propranolol", "Rosuvastatin", "Sertraline", "Simvastatin",
-    "Spironolactone", "Tamsulosin", "Tramadol", "Valacyclovir", "Venlafaxine", "Warfarin",
-    "Zolpidem", "Zoledronic Acid"
+"Acetaminophen", "Adalimumab", "Albuterol", "Alprazolam", "Amiodarone", "Amoxicillin", 
+"Amlodipine", "Atorvastatin", "Azathioprine", "Azithromycin", "Benazepril", "Bupropion", 
+"Carvedilol", "Cetirizine", "Citalopram", "Clemastine", "Clindamycin", "Clopidogrel", 
+"Dexamethasone", "Diazepam", "Digoxin", "Diclofenac", "Diphenhydramine", "Doxycycline", 
+"Duloxetine", "Enalapril", "Enoxaparin", "Escitalopram", "Esomeprazole", "Eszopiclone", 
+"Fluoxetine", "Fluticasone", "Folic Acid", "Furosemide", "Gabapentin", "Hydrochlorothiazide", 
+"Hydroxyzine", "Ibuprofen", "Insulin Glargine", "Ketoconazole", "Lansoprazole", "Lisinopril", 
+"Losartan", "Lorazepam", "Loratadine", "Metformin", "Methotrexate", "Metoprolol", "Methylprednisolone", 
+"Montelukast", "Nadolol", "Naproxen", "Olmesartan", "Omeprazole", "Oxycodone", "Pantoprazole", 
+"Paracetamol", "Prednisone", "Propranolol", "Rosuvastatin", "Sertraline", "Simvastatin", 
+"Spironolactone", "Tamsulosin", "Tramadol", "Valacyclovir", "Venlafaxine", "Warfarin", 
+"Zolpidem", "Zoledronic Acid"
+
   ];
 
   const symptoms = [

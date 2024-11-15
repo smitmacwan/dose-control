@@ -58,11 +58,11 @@ const App = () => {
       if (data.results && data.results.length > 0) {
         const result = data.results[0];
         setDrugInfo({
-          'Indications and Usage': result.indications_and_usage,
-          Warnings: result.warnings,
-          'Dosage and Administration': result.dosage_and_administration,
-          Purpose: result.purpose,
-          'Active Ingredients': result.active_ingredient,
+          "Indications and Usage": result.indications_and_usage,
+          "Warnings": result.warnings,
+          "Dosage and Administration": result.dosage_and_administration,
+          "Purpose": result.purpose,
+          "Active Ingredients": result.active_ingredient,
         });
       } else {
         setErrorMessage('No data found.');

@@ -19,7 +19,15 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
   const [selectedDrug, setSelectedDrug] = useState('');
+  const [expanded, setExpanded] = useState({});
 
+  const toggleExpanded = (key) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+  
   const symptomToDrugs = {
     "Pain": ["Ibuprofen", "Acetaminophen", "Naproxen"],
     "Fever": ["Acetaminophen", "Ibuprofen", "Aspirin"], 
@@ -63,6 +71,11 @@ const App = () => {
           "Dosage and Administration": result.dosage_and_administration,
           "Purpose": result.purpose,
           "Active Ingredients": result.active_ingredient,
+          "Storage and Handling": result.storage_and_handling,
+          "Overdosage": result.overdosage,  
+          "Do Not Use": result.do_not_use,
+          "Ask Doctor": result.ask_doctor,
+  
         });
       } else {
         setErrorMessage('No data found.');
@@ -135,7 +148,7 @@ const App = () => {
               <div>
                 <div className="hero-section text-center text-white d-flex align-items-center justify-content-center">
                   <div className="overlay">
-                    <h1 className="display-4">Search for Drug Information</h1>
+                    <h1 className="display-4 fw-medium">Search for Drug Information</h1>
 
                     <div className="input-group my-3 w-50 mx-auto">
                       <select
@@ -175,7 +188,7 @@ const App = () => {
 
                     {symptom && (
                       <>
-                        <h2 className="mt-4 mb-3">For {symptom}, these are the recommended drugs:</h2>
+                        <h2 className="fs-4 mt-4 mb-3">For {symptom}, these are the recommended drugs:</h2>
                         <div className="d-flex justify-content-center flex-wrap">
                           {symptomToDrugs[symptom].map((drug) => (
                             <button
@@ -202,24 +215,54 @@ const App = () => {
 
                 {drugInfo && (
                   <div className="container my-5">
-                    <h3 className="mt-5 mb-3 text-center">Drug details: {selectedDrug}</h3>
-                    <div className="table-responsive">
-                      <table className="table table-striped table-bordered">
-                        <thead>
-                          <tr>
-                            <th>Label</th>
-                            <th>Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {Object.entries(drugInfo).map(([key, value]) => (
-                            <tr key={key}>
-                              <td>{key}</td>
-                              <td>{Array.isArray(value) ? value.join(', ') : value}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <h3 className="mt-5 mb-4 text-center">Drug Details: {selectedDrug}</h3>
+                    <div className="row justify-content-center">
+                      {Object.entries(drugInfo)
+                        .filter(([_, value]) => value) // Exclude empty values
+                        .map(([key, value]) => {
+                          const isLongText = Array.isArray(value)
+                            ? value.join(', ').length > 100
+                            : value.length > 100; // Check if the text is long
+                          return (
+                            <div key={key} className="col-md-6 col-lg-4 mb-4">
+                              <div
+                                className="card shadow-sm"
+                                style={{
+                                  borderRadius: '10px',
+                                  overflow: 'hidden',
+                                  backgroundColor: '#f8f9fa',
+                                  borderColor: '#ddd',
+                                }}
+                              >
+                                <div className="card-body">
+                                  <h5 className="card-title text-primary">{key}</h5>
+                                  <p
+                                    className={`card-text ${!expanded[key] && isLongText ? 'text-truncate' : ''}`}
+                                    style={{
+                                      lineHeight: '1.5',
+                                      marginBottom: '0.5rem',
+                                    }}
+                                  >
+                                    {Array.isArray(value) ? value.join(', ') : value}
+                                  </p>
+                                  {isLongText && (
+                                    <span
+                                      className="text-primary"
+                                      style={{
+                                        cursor: 'pointer',
+                                        fontSize: '0.9rem',
+                                        textDecoration: 'underline',
+                                      }}
+                                      onClick={() => toggleExpanded(key)}
+                                    >
+                                      {expanded[key] ? 'Show Less' : 'Show More'}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                 )}

@@ -7,6 +7,18 @@ html, body {
   overflow-y: auto;
 }
 
+.text-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  line-height: 1.5; /* For better readability */
+  color: #555;
+}
+
+
 .navbar {
   padding: 1rem 1.5rem;
 }
@@ -68,7 +80,7 @@ html, body {
   padding: 30px;
   border-radius: 8px;
   text-align: center;
-  max-width: 700px;
+  max-width: 1000px;
 }
 
 .hero-section h1,
@@ -206,3 +218,4 @@ html, body {
     padding: 0.5rem 1rem;
   }
 }
+

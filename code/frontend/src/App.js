@@ -13,12 +13,12 @@ import Cancel from './Cancel';
 const stripePromise = loadStripe('pk_test_51QIewlLcL7MzCv4NK4x6jPCbfCzTijpjGxJTrFdVxrQrCYPEGKf9CV8gxXCY14llvV2cGbEjfL9FdSBPCBO00tHT003Ncvyd4m');
 
 const App = () => {
+  const [drugName, setDrugName] = useState('');
   const [symptom, setSymptom] = useState('');
   const [drugInfo, setDrugInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectedDrug, setSelectedDrug] = useState(''); 
-
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
+  const [selectedDrug, setSelectedDrug] = useState('');
 
   const symptomToDrugs = {
     "Pain": ["Ibuprofen", "Acetaminophen", "Naproxen"],
@@ -42,7 +42,7 @@ const App = () => {
     "Flu": ["Oseltamivir", "Zanamivir", "Baloxavir"],
     "Chronic Pain": ["Tramadol", "Gabapentin", "Amitriptyline"]
   };
-
+ 
   const fetchDrugData = async (drug) => {
     if (!drug) return;
 
@@ -58,11 +58,11 @@ const App = () => {
       if (data.results && data.results.length > 0) {
         const result = data.results[0];
         setDrugInfo({
-          "Indications and Usage": result.indications_and_usage,
-          "Warnings": result.warnings,
-          "Dosage and Administration": result.dosage_and_administration,
-          "Purpose": result.purpose,
-          "Active Ingredients": result.active_ingredient,
+          'Indications and Usage': result.indications_and_usage,
+          Warnings: result.warnings,
+          'Dosage and Administration': result.dosage_and_administration,
+          Purpose: result.purpose,
+          'Active Ingredients': result.active_ingredient,
         });
       } else {
         setErrorMessage('No data found.');
@@ -79,10 +79,19 @@ const App = () => {
     setErrorMessage('');
   };
 
-
   const handleDrugSelect = (drug) => {
-    setSelectedDrug(drug); // Set the selected drug name
+    setSelectedDrug(drug);
     fetchDrugData(drug);
+  };
+
+  const handleLoginSuccess = (name) => {
+    setUserName(name);
+    sessionStorage.setItem('userName', name);
+  };
+
+  const handleLogout = () => {
+    setUserName(null);
+    sessionStorage.removeItem('userName');
   };
 
   return (
@@ -100,7 +109,13 @@ const App = () => {
                   <li className="nav-item"><a className="nav-link px-4" href="/login">Login</a></li>
                 ) : (
                   <li className="nav-item">
-                    <a className="nav-link px-4" href="#" onClick={() => { sessionStorage.removeItem('userName'); setUserName(null); }}>Logout</a>
+                    <a
+                      className="nav-link px-4"
+                      href="#"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </a>
                   </li>
                 )}
                 <li className="nav-item"><a className="nav-link px-4" href="/about">About</a></li>
@@ -122,7 +137,7 @@ const App = () => {
                   <div className="overlay">
                     <h1 className="display-4">Search for Drug Information</h1>
 
-                    <div className="input-group my-3 w-100 mx-auto">
+                    <div className="input-group my-3 w-50 mx-auto">
                       <select
                         className="form-select"
                         value={symptom}
@@ -135,28 +150,28 @@ const App = () => {
                       </select>
                     </div>
 
-                      {/* Common Symptoms Section */}
-                      <h5 className="mt-4">Common Symptoms:</h5>
-                      <div className="d-flex flex-wrap justify-content-center mb-3">
-                        {["Pain", "Fever", "Cough", "Allergy", "Headache", "Anxiety", "Nausea", "Insomnia"].map((commonSymptom) => (
-                          <button
-                            key={commonSymptom}
-                            className="btn btn-primary m-1"
-                            style={{
-                              padding: '5px 15px',
-                              borderRadius: '20px',
-                              fontSize: '0.85rem',
-                              backgroundColor: '#007bff',
-                              color: '#fff'
-                            }}
-                            onClick={() => handleSymptomSelect(commonSymptom)}
-                          >
-                            {commonSymptom}
-                          </button>
-                        ))}
-                      </div>
 
-
+                    {/* Quick Search Buttons for Most-Searched Symptoms */}
+                    <h5 className="mt-3">Most Searched Symptoms:</h5>
+                    <div className="d-flex flex-wrap justify-content-center mb-4">
+                      {['Pain', 'Fever', 'Cough', 'Allergy', 'Headache', 'Anxiety', 'Insomnia'].map((commonSymptom) => (
+                        <button
+                          key={commonSymptom}
+                          className="btn btn-outline-primary m-2"
+                          style={{
+                            borderRadius: '20px',
+                            padding: '5px 15px',
+                            fontSize: '0.85rem',
+                            borderColor: '#007bff',
+                            color: '#007bff',
+                            backgroundColor: '#f8f9fa',
+                          }}
+                          onClick={() => handleSymptomSelect(commonSymptom)}
+                        >
+                          {commonSymptom}
+                        </button>
+                      ))}
+                    </div>
 
                     {symptom && (
                       <>
@@ -170,7 +185,7 @@ const App = () => {
                                 padding: '10px 20px',
                                 borderRadius: '5px',
                                 backgroundColor: '#007bff',
-                                color: '#fff'
+                                color: '#fff',
                               }}
                               onClick={() => handleDrugSelect(drug)}
                             >
@@ -211,7 +226,7 @@ const App = () => {
               </div>
             }
           />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/about" element={<About />} />
           <Route path="/donations" element={<Donations />} />
           <Route path="/success" element={<Success />} />

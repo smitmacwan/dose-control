@@ -1,6 +1,6 @@
 {
-  "short_name": "Dose Control",
-  "name": "Dose Control App",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",

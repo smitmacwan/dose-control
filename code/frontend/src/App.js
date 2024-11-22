@@ -222,7 +222,7 @@ const App = () => {
                               className="btn btn-primary m-2"
                               style={{
                                 padding: '10px 20px',
-                                borderRadius: '5px',
+                                borderRadius: '50px',
                                 backgroundColor: '#007bff',
                                 color: '#fff',
                               }}

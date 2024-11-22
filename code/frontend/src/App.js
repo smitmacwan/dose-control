@@ -110,36 +110,62 @@ const App = () => {
   return (
     <Elements stripe={stripePromise}>
       <div className="container-fluid p-0">
-        <nav className="navbar navbar-expand-lg bg-light">
-          <div className="container">
-            <a className="navbar-brand" href="#">
-              <img src="/DoseControl_Logo_Transparent.png" alt="Logo" style={{ height: '60px' }} />
+
+
+  <nav className="navbar navbar-expand-lg navbar-light bg-light">
+  <div className="container">
+    <a className="navbar-brand" href="#">
+      <img src="/DoseControl_Logo_Transparent.png" alt="Logo" style={{ height: '60px' }} />
+    </a>
+    <button
+      className="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span className="navbar-toggler-icon"></span>
+    </button>
+    <div className="collapse navbar-collapse" id="navbarNav">
+      <ul className="navbar-nav ml-auto">
+        <li className="nav-item">
+          <a className="nav-link px-4" href="/">
+            Home
+          </a>
+        </li>
+        {!userName ? (
+          <li className="nav-item">
+            <a className="nav-link px-4" href="/login">
+              Login
             </a>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ml-auto">
-                <li className="nav-item"><a className="nav-link px-4" href="/">Home</a></li>
-                {!userName ? (
-                  <li className="nav-item"><a className="nav-link px-4" href="/login">Login</a></li>
-                ) : (
-                  <li className="nav-item">
-                    <a
-                      className="nav-link px-4"
-                      href="#"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </a>
-                  </li>
-                )}
-                <li className="nav-item"><a className="nav-link px-4" href="/about">About</a></li>
-                <li className="nav-item"><a className="nav-link px-4" href="/donations">Donations</a></li>
-              </ul>
-              <span className="navbar-text ml-auto px-4">
-                {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
-              </span>
-            </div>
-          </div>
-        </nav>
+          </li>
+        ) : (
+          <li className="nav-item">
+            <a className="nav-link px-4" href="#" onClick={handleLogout}>
+              Logout
+            </a>
+          </li>
+        )}
+        <li className="nav-item">
+          <a className="nav-link px-4" href="/about">
+            About
+          </a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link px-4" href="/donations">
+            Donations
+          </a>
+        </li>
+      </ul>
+      <span className="navbar-text ml-auto px-4">
+        {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
+      </span>
+    </div>
+  </div>
+</nav>
+
 
         <Routes>
           <Route

@@ -5,7 +5,7 @@ const About = () => {
     <>
       <div className="about-hero-section">
         <div className="hero-overlay">
-          <h1 className="display-3 text-white text-center">About Us</h1>
+          <h1 className="display-3 text-center">About Us</h1>
         </div>
       </div>
 

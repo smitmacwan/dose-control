@@ -20,6 +20,18 @@ const App = () => {
   const [userName, setUserName] = useState(() => sessionStorage.getItem('userName') || null);
   const [selectedDrug, setSelectedDrug] = useState('');
   const [expanded, setExpanded] = useState({});
+  const [isReading, setIsReading] = useState(false); // Tracks if speech is active
+  const [isTextLarge, setIsTextLarge] = useState(false);
+  // Accessibility-related states
+  // Effect for applying text hover scaling
+
+  useEffect(() => {
+    if (isTextLarge) {
+      document.body.classList.add('large-text');
+    } else {
+      document.body.classList.remove('large-text');
+    }
+  }, [isTextLarge]);
 
   const toggleExpanded = (key) => {
     setExpanded((prev) => ({
@@ -27,10 +39,10 @@ const App = () => {
       [key]: !prev[key],
     }));
   };
-  
+
   const symptomToDrugs = {
     "Pain": ["Ibuprofen", "Acetaminophen", "Naproxen"],
-    "Fever": ["Acetaminophen", "Ibuprofen", "Aspirin"], 
+    "Fever": ["Acetaminophen", "Ibuprofen", "Aspirin"],
     "Cough": ["Dextromethorphan", "Guaifenesin", "Codeine"],
     "Allergy": ["Cetirizine", "Loratadine", "Diphenhydramine"],
     "Headache": ["Aspirin", "Acetaminophen", "Ibuprofen"],
@@ -50,7 +62,7 @@ const App = () => {
     "Flu": ["Oseltamivir", "Zanamivir", "Baloxavir"],
     "Chronic Pain": ["Tramadol", "Gabapentin", "Amitriptyline"]
   };
- 
+
   const fetchDrugData = async (drug) => {
     if (!drug) return;
 
@@ -72,10 +84,10 @@ const App = () => {
           "Purpose": result.purpose,
           "Active Ingredients": result.active_ingredient,
           "Storage and Handling": result.storage_and_handling,
-          "Overdosage": result.overdosage,  
+          "Overdosage": result.overdosage,
           "Do Not Use": result.do_not_use,
           "Ask Doctor": result.ask_doctor,
-  
+
         });
       } else {
         setErrorMessage('No data found.');
@@ -107,64 +119,110 @@ const App = () => {
     sessionStorage.removeItem('userName');
   };
 
+  // Screen Reader Functionality
+  const handleScreenReader = () => {
+    if (isReading) {
+      // Stop the speech
+      window.speechSynthesis.cancel();
+      setIsReading(false);
+    } else {
+      // Start the speech
+      const pageContent = document.body.innerText; // Extract visible text on the page
+      const speech = new SpeechSynthesisUtterance(pageContent); // Create a speech instance
+      speech.lang = 'en-US'; // Language setting
+      speech.rate = 1; // Adjust speech rate (1 is normal)
+
+      window.speechSynthesis.speak(speech);
+      setIsReading(true);
+
+      // Automatically reset the state when speech finishes
+      speech.onend = () => {
+        setIsReading(false);
+      };
+    }
+  };
+
+
   return (
     <Elements stripe={stripePromise}>
       <div className="container-fluid p-0">
 
 
-  <nav className="navbar navbar-expand-lg navbar-light bg-light">
-  <div className="container">
-    <a className="navbar-brand" href="#">
-      <img src="/DoseControl_Logo_Transparent.png" alt="Logo" style={{ height: '60px' }} />
-    </a>
-    <button
-      className="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    <div className="collapse navbar-collapse" id="navbarNav">
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <a className="nav-link px-4" href="/">
-            Home
-          </a>
-        </li>
-        {!userName ? (
-          <li className="nav-item">
-            <a className="nav-link px-4" href="/login">
-              Login
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="container">
+            <a className="navbar-brand" href="#">
+              <img src="/DoseControl_Logo_Transparent.png" alt="Logo" style={{ height: '60px' }} />
             </a>
-          </li>
-        ) : (
-          <li className="nav-item">
-            <a className="nav-link px-4" href="#" onClick={handleLogout}>
-              Logout
-            </a>
-          </li>
-        )}
-        <li className="nav-item">
-          <a className="nav-link px-4" href="/about">
-            About
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link px-4" href="/donations">
-            Donations
-          </a>
-        </li>
-      </ul>
-      <span className="navbar-text ml-auto px-4">
-        {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
-      </span>
-    </div>
-  </div>
-</nav>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <a className="nav-link px-4" href="/">
+                    Home
+                  </a>
+                </li>
+                {!userName ? (
+                  <li className="nav-item">
+                    <a className="nav-link px-4" href="/login">
+                      Login
+                    </a>
+                  </li>
+                ) : (
+                  <li className="nav-item">
+                    <a className="nav-link px-4" href="#" onClick={handleLogout}>
+                      Logout
+                    </a>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <a className="nav-link px-4" href="/about">
+                    About
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link px-4" href="/donations">
+                    Donations
+                  </a>
+                </li>
+              </ul>
+              <span className="navbar-text ml-auto px-4">
+                {userName ? `Welcome, ${userName}!` : 'Welcome, Guest!'}
+              </span>
+
+              {/* Accessibility Tools */}
+              <div className="accessibility-tools">
+                {/* Text Size Toggle */}
+
+                <button
+                  className={`toggle-btn ${isTextLarge ? 'active' : ''}`}
+                  onClick={() => setIsTextLarge(!isTextLarge)}
+                  aria-label={isTextLarge ? 'Disable Large Text' : 'Enable Large Text'}
+                >
+                  {isTextLarge ? 'Text Large: On' : 'Text Large: Off'}
+                </button>
+
+                {/* Screen Reader Icon */}
+                <button title="click to start read"
+                  className="screen-reader-button"
+                  onClick={handleScreenReader}
+                  aria-label={isReading ? "Stop Screen Reader" : "Start Screen Reader"}
+                >
+                  {isReading ? "🛑" : "📢"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
 
 
         <Routes>
@@ -175,6 +233,7 @@ const App = () => {
                 <div className="hero-section text-center text-white d-flex align-items-center justify-content-center">
                   <div className="overlay">
                     <h1 className="display-4 fw-medium">Search for Drug Information</h1>
+                    {/* Example Texts */}
 
                     <div className="input-group my-3 w-50 mx-auto">
                       <select
